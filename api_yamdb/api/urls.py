@@ -1,6 +1,7 @@
 from rest_framework import routers
 from django.urls import include, path
 from .views import (
+    APIToken, APISignup,
     UserViewSet, CategoryViewSet, GenreViewSet, TitleViewSet,
     ReviewViewSet, CommentViewSet
 )
@@ -21,6 +22,8 @@ router.register(
 )
 
 urlpatterns = [
-    path('v1/', include('djoser.urls.jwt')),
+    path('v1/auth/signup/', APISignup.as_view(), name='signup'),
+    path('v1/auth/token/', APIToken.as_view(), name='token'),
+    # path('v1/', include('djoser.urls')),
     path('v1/', include(router.urls)),
 ]

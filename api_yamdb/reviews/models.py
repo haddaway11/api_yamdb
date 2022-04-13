@@ -1,9 +1,30 @@
-from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.db import models
 
+
+USER = 'user'
+MODERATOR = 'moderator'
+ADMIN = 'admin'
+
+CHOICE_ROLE = (
+    (USER, 'аутентифицированный пользователь'),
+    (MODERATOR, 'модератор'),
+    (ADMIN, 'администратор'),
+)
 
 class User(AbstractUser):
-    pass
+    bio = models.TextField(
+        'Биография',
+        blank=True,
+    )
+    role = models.TextField(
+        'Пользовательская роль',
+        max_length=40,
+        choices=CHOICE_ROLE,
+        default='user',
+        blank=True,
+    )
+
 
 
 class Category(models.Model):

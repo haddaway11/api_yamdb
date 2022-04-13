@@ -1,8 +1,16 @@
 from rest_framework import permissions, viewsets
+from rest_framework.views import APIView
 from reviews.models import User, Category, Genre, Title, Review, Comment
 
 
 
+
+class APIToken(APIView):
+    pass
+
+
+class APISignup(APIView):
+    pass
 
 
 class UserViewSet(viewsets.ModelViewSet):
