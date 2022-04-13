@@ -24,7 +24,24 @@ class User(AbstractUser):
         default='user',
         blank=True,
     )
+    confirmation_code = models.CharField(
+        'Код подтверждения',
+        max_length=150,
+        null=True,
+        blank=False,
+    )
+    
+    def is_admin(self):
+        return self.role == ADMIN
 
+    def is_moderator(self):
+        return self.role == MODERATOR
+
+    def is_user(self):
+        return self.role == USER
+
+    def __str__(self):
+        return self.username
 
 
 class Category(models.Model):
