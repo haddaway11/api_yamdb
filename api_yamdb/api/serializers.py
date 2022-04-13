@@ -8,16 +8,26 @@ from reviews.models import User, Category, Genre, Title, Review, Comment
 class UserSerializer(serializers.ModelSerializer):
     pass
 
+
 class CategorySerializer(serializers.ModelSerializer):
-    pass
+    
+    class Meta:
+        model = Category
+        fields = '__all__'
 
 
 class GenreSerializer(serializers.ModelSerializer):
-    pass
+    
+    class Meta:
+        model = Genre
+        fields = '__all__'
 
 
 class TitleSerializer(serializers.ModelSerializer):
-    pass
+    
+    class Meta:
+        model = Title
+        fields = '__all__'
 
 
 class ReviewSerializer(serializers.ModelSerializer):
