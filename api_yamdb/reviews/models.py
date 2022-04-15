@@ -65,7 +65,7 @@ class Title(models.Model):
     year = models.IntegerField()
     description = models.TextField()
     genre = models.ForeignKey(
-        Category, on_delete=models.SET_NULL,
+        Genre, on_delete=models.SET_NULL,
         related_name='Genre', blank=True, null=True
     )
     category = models.ForeignKey(
