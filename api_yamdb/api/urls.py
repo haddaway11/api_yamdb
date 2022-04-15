@@ -8,7 +8,7 @@ from .views import (
 
 
 router = routers.DefaultRouter()
-# router.register('users', UserViewSet)
+router.register('users', UserViewSet)
 # router.register('categories', CategoryViewSet)
 # router.register('genres', GenreViewSet)
 # router.register('titles', TitleViewSet)
@@ -24,6 +24,5 @@ router = routers.DefaultRouter()
 urlpatterns = [
     path('v1/auth/signup/', APISignup.as_view(), name='signup'),
     path('v1/auth/token/', APIToken.as_view(), name='token'),
-    # path('v1/', include('djoser.urls')),
     path('v1/', include(router.urls)),
 ]
