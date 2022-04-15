@@ -7,12 +7,32 @@ MODERATOR = 'moderator'
 ADMIN = 'admin'
 
 CHOICE_ROLE = (
-    (USER, 'аутентифицированный пользователь'),
-    (MODERATOR, 'модератор'),
-    (ADMIN, 'администратор'),
+    (USER, 'user'),
+    (MODERATOR, 'moderator'),
+    (ADMIN, 'admin'),
 )
 
 class User(AbstractUser):
+    email = models.EmailField(
+        verbose_name='Адрес электронной почты',
+        max_length=254,
+        unique=True,
+    )
+    username = models.SlugField(
+        verbose_name='Имя пользователя',
+        max_length=150,
+        unique=True,
+    )
+    first_name = models.CharField(
+        'Имя',
+        max_length=150,
+        blank=True,
+    )
+    last_name = models.CharField(
+        'Фамилия',
+        max_length=150,
+        blank=True
+    )
     bio = models.TextField(
         'Биография',
         blank=True,
@@ -31,14 +51,20 @@ class User(AbstractUser):
         blank=False,
     )
     
+    @property
     def is_admin(self):
         return self.role == ADMIN
-
+    
+    @property
     def is_moderator(self):
         return self.role == MODERATOR
 
+    @property
     def is_user(self):
         return self.role == USER
+
+    class Meta:
+       ordering = ['-id']
 
     def __str__(self):
         return self.username
@@ -46,7 +72,7 @@ class User(AbstractUser):
 
 class Category(models.Model):
     name = models.CharField(max_length=200)
-    slug = slug = models.SlugField(unique=True)
+    slug = models.SlugField(unique=True)
 
     def __str__(self):
         return self.name
@@ -54,7 +80,7 @@ class Category(models.Model):
 
 class Genre(models.Model):
     name = models.CharField(max_length=200)
-    slug = slug = models.SlugField(unique=True)
+    slug = models.SlugField(unique=True)
 
     def __str__(self):
         return self.name
