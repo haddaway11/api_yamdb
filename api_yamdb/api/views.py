@@ -12,13 +12,12 @@ from rest_framework import permissions, status, viewsets
 from rest_framework.filters import SearchFilter
 from reviews.models import User, Category, Genre, Title, Review, Comment
 from django.core.mail import send_mail
-from .permissions import IsAdminOrReadOnly
 from .serializers import (SignUpSerializer, TokenSerializer,
                           UserSerializer, TitleSerializer,
                           NoStaffSerializer, CategorySerializer,
                           GenreSerializer, ReviewSerializer,
                           CommentSerializer)
-from .permissions import (IsAdmin, IsModerator, IsOwnerOrReadOnly)
+from .permissions import (IsAdmin, IsModerator, IsOwnerOrReadOnly, ReadOnly)
 
 
 class APIToken(APIView):
@@ -96,29 +95,36 @@ class UserViewSet(viewsets.ModelViewSet):
 
 class CategoryViewSet(viewsets.ModelViewSet):
     permission_classes = [
-        permissions.IsAuthenticatedOrReadOnly,
-        IsAdmin,
+        ReadOnly or IsAdmin,
     ]
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+    filter_backends = (SearchFilter,)
+    search_fields = ('name',)
+    lookup_field = 'slug'
 
 
-class GenreViewSet(viewsets.ModelViewSet):
+class GenreViewSet(IsAdmin, viewsets.ModelViewSet):
     permission_classes = [
-        permissions.IsAuthenticatedOrReadOnly,
-        IsAdmin,
+        ReadOnly or IsAdmin,
     ]
+    filter_backends = (SearchFilter,)
+    pagination_class = PageNumberPagination
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
+    search_fields = ('name',)
+    lookup_field = 'slug'
 
 
-class TitleViewSet(viewsets.ModelViewSet):
+class TitleViewSet(IsAdmin, viewsets.ModelViewSet):
     permission_classes = [
-        permissions.IsAuthenticatedOrReadOnly,
-        IsAdmin,
+        ReadOnly or IsAdmin,
     ]
+    filter_backends = (SearchFilter,)
+    pagination_class = PageNumberPagination
     queryset = Title.objects.all()
     serializer_class = TitleSerializer
+    search_fields = ('category', 'genre', 'name', 'year',) 
 
 
 class ReviewViewSet(viewsets.ModelViewSet):

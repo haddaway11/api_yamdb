@@ -71,11 +71,11 @@ class User(AbstractUser):
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, unique=True)
     slug = models.SlugField(unique=True)
 
     def __str__(self):
-        return self.name
+        return self.slug
 
 
 class Genre(models.Model):
@@ -83,20 +83,20 @@ class Genre(models.Model):
     slug = models.SlugField(unique=True)
 
     def __str__(self):
-        return self.name
+        return self.slug
 
 
 class Title(models.Model):
     name = models.CharField(max_length=200)
     year = models.IntegerField()
     description = models.TextField()
-    genre = models.ForeignKey(
-        Genre, on_delete=models.SET_NULL,
-        related_name='Genre', blank=True, null=True
+    genre = models.ManyToManyField(
+        Genre,
+        related_name='Genre', db_index=True, blank=True
     )
     category = models.ForeignKey(
         Category, on_delete=models.SET_NULL,
-        related_name='Category', blank=True, null=True
+        related_name='Category', db_index=True, blank=True, null=True
     )
 
     def __str__(self):
