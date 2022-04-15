@@ -97,7 +97,7 @@ class UserViewSet(viewsets.ModelViewSet):
 class CategoryViewSet(viewsets.ModelViewSet):
     permission_classes = [
         permissions.IsAuthenticatedOrReadOnly,
-        IsAdminOrReadOnly,
+        IsAdmin,
     ]
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
@@ -106,7 +106,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
 class GenreViewSet(viewsets.ModelViewSet):
     permission_classes = [
         permissions.IsAuthenticatedOrReadOnly,
-        IsAdminOrReadOnly,
+        IsAdmin,
     ]
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
@@ -115,7 +115,7 @@ class GenreViewSet(viewsets.ModelViewSet):
 class TitleViewSet(viewsets.ModelViewSet):
     permission_classes = [
         permissions.IsAuthenticatedOrReadOnly,
-        IsAdminOrReadOnly,
+        IsAdmin,
     ]
     queryset = Title.objects.all()
     serializer_class = TitleSerializer
