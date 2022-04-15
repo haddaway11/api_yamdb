@@ -6,7 +6,6 @@ from .views import (
     ReviewViewSet, CommentViewSet
 )
 
-
 router = routers.DefaultRouter()
 #router.register('users', UserViewSet)
 router.register('categories', CategoryViewSet)
@@ -24,6 +23,5 @@ router.register(
 urlpatterns = [
     path('v1/auth/signup/', APISignup.as_view(), name='signup'),
     path('v1/auth/token/', APIToken.as_view(), name='token'),
-    path('v1/', include('djoser.urls.jwt')),
     path('v1/', include(router.urls)),
 ]
