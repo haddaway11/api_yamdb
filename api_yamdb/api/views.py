@@ -1,5 +1,5 @@
 from email import message
-from rest_framework import permissions, viewsets
+from rest_framework import permissions, viewsets, generics
 from rest_framework.views import APIView
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -16,8 +16,10 @@ from .serializers import (SignUpSerializer, TokenSerializer,
                           UserSerializer, TitleSerializer,
                           NoStaffSerializer, CategorySerializer,
                           GenreSerializer, ReviewSerializer,
-                          CommentSerializer)
+                          CommentSerializer, TitleReadSerializer,
+                          TitleWriteSerializer)
 from .permissions import (IsAdmin, IsModerator, IsOwnerOrReadOnly, ReadOnly, IsAdminOrReadOnly)
+from .mixins import ModelMixinSet
 
 
 class APIToken(APIView):
@@ -93,20 +95,21 @@ class UserViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 
-class CategoryViewSet(viewsets.ModelViewSet):
+class CategoryViewSet(ModelMixinSet):
     permission_classes = [
-        ReadOnly or IsAdminOrReadOnly,
+        IsAdminOrReadOnly,
     ]
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+    pagination_class = PageNumberPagination
     filter_backends = (SearchFilter,)
     search_fields = ('name',)
     lookup_field = 'slug'
 
 
-class GenreViewSet(IsAdmin, viewsets.ModelViewSet):
+class GenreViewSet(ModelMixinSet):
     permission_classes = [
-        ReadOnly or IsAdminOrReadOnly,
+        IsAdminOrReadOnly,
     ]
     filter_backends = (SearchFilter,)
     pagination_class = PageNumberPagination
@@ -115,16 +118,24 @@ class GenreViewSet(IsAdmin, viewsets.ModelViewSet):
     search_fields = ('name',)
     lookup_field = 'slug'
 
+    def retrieve(self, request, *args, **kwargs):
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
-class TitleViewSet(IsAdmin, viewsets.ModelViewSet):
+    def update(self, request, *args, **kwargs):
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
+class TitleViewSet(viewsets.ModelViewSet):
     permission_classes = [
-        ReadOnly or IsAdminOrReadOnly,
+        IsAdminOrReadOnly,
     ]
-    filter_backends = (SearchFilter,)
     pagination_class = PageNumberPagination
     queryset = Title.objects.all()
     serializer_class = TitleSerializer
-    search_fields = ('category', 'genre', 'name', 'year',) 
+    filter_backends = (SearchFilter,)
+    search_fields = ('category', 'genre', 'name', 'year',)
+
+
 
 
 class ReviewViewSet(viewsets.ModelViewSet):

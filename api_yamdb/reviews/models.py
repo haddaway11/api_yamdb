@@ -71,32 +71,31 @@ class User(AbstractUser):
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=200, unique=True)
+    name = models.CharField(max_length=50)
     slug = models.SlugField(unique=True)
 
     def __str__(self):
-        return self.slug
+        return self.name
 
 
 class Genre(models.Model):
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=50)
     slug = models.SlugField(unique=True)
 
     def __str__(self):
-        return self.slug
+        return self.name
 
 
 class Title(models.Model):
     name = models.CharField(max_length=200)
-    year = models.IntegerField()
-    description = models.TextField()
-    genre = models.ManyToManyField(
-        Genre,
-        related_name='Genre', db_index=True, blank=True
-    )
+    year = models.PositiveSmallIntegerField()
+    description = models.CharField(max_length=200, blank=True)
+#    rating = models.FloatField(default=None, null=True, blank=True)
     category = models.ForeignKey(
-        Category, on_delete=models.SET_NULL,
-        related_name='Category', db_index=True, blank=True, null=True
+        Category, on_delete=models.SET_NULL, related_name="titles", blank=True, null=True
+    )
+    genre = models.ManyToManyField(
+        Genre, related_name="titles", blank=True
     )
 
     def __str__(self):
