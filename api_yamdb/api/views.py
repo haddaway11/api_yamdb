@@ -10,6 +10,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import permissions, status, viewsets
 from rest_framework.filters import SearchFilter
+from django_filters.rest_framework import DjangoFilterBackend
 from reviews.models import User, Category, Genre, Title, Review, Comment
 from django.core.mail import send_mail
 from .serializers import (SignUpSerializer, TokenSerializer,
@@ -133,15 +134,13 @@ class TitleViewSet(viewsets.ModelViewSet):
     pagination_class = PageNumberPagination
     queryset = Title.objects.all()
     # serializer_class = TitleReadSerializer
-    filter_backends = (SearchFilter,)
-    filterset_class = TitleFilter
-    search_fields = ('category', 'genre', 'name', 'year',)
+    # filter_backends = (SearchFilter,)
+    # filterset_class = TitleFilter
+    filter_backends = (DjangoFilterBackend, )
+    # search_fields = ('category', 'genre', 'name', 'year',)
+    filterset_fields = ('category', 'genre', 'name', 'year',)
 
     def get_serializer_class(self):
-
-        # if self.action in ('list', 'retrieve'):
-        #     return TitleReadSerializer
-        # return TitleWriteSerializer
         if self.request.method in ('POST', 'PATCH',):
             return TitlePostSerializer
         return TitleSerializer
