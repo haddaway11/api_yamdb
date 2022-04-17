@@ -1,24 +1,6 @@
-from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.shortcuts import get_object_or_404
-
-
-# class User(AbstractUser):
-
-#     bio = models.TextField(
-#         'Биография',
-#         blank=True,
-#     )
-#     role = models.CharField(max_length=10)
-
-
-# class Title(models.Model):
-#     name = models.CharField(max_length=200)
-#     year = models.IntegerField()
-#     description = models.TextField()
-#     genre = models.CharField(max_length=50)
-#     category = models.CharField(max_length=50)
 
 
 class Review(models.Model):
