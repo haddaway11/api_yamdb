@@ -131,11 +131,14 @@ class TitleViewSet(viewsets.ModelViewSet):
     ]
     pagination_class = PageNumberPagination
     queryset = Title.objects.all()
-    serializer_class = TitleSerializer
+    serializer_class = TitleReadSerializer
     filter_backends = (SearchFilter,)
     search_fields = ('category', 'genre', 'name', 'year',)
 
-
+    def get_serializer_class(self):
+        if self.action in ('list', 'retrieve'):
+            return TitleReadSerializer
+        return TitleWriteSerializer
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
