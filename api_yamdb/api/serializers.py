@@ -5,7 +5,6 @@ from django.core.exceptions import ValidationError
 from reviews.models import User, Category, Genre, Title, Review, Comment
 
 
-
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -88,9 +87,23 @@ class TitlePostSerializer(serializers.ModelSerializer):
 
 
 class ReviewSerializer(serializers.ModelSerializer):
-    pass
+
+    author = SlugRelatedField(
+        read_only=True,
+        slug_field='username'
+    )
+
+    class Meta:
+        exclude = ('title_id', )
+        model = Review
 
 
 class CommentSerializer(serializers.ModelSerializer):
-    pass
+    author = SlugRelatedField(
+        read_only=True,
+        slug_field='username'
+    )
 
+    class Meta:
+        exclude = ('review_id', )
+        model = Comment
