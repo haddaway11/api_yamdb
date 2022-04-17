@@ -16,7 +16,7 @@ from .serializers import (SignUpSerializer, TokenSerializer,
                           UserSerializer, TitleSerializer,
                           NoStaffSerializer, CategorySerializer,
                           GenreSerializer, ReviewSerializer,
-                          CommentSerializer)
+                          CommentSerializer, TitlePostSerializer)
 from .permissions import (IsAdmin, IsModerator, IsOwnerOrReadOnly, ReadOnly, IsAdminOrReadOnly)
 from .mixins import ModelMixinSet
 from .filters import TitleFilter
@@ -136,6 +136,11 @@ class TitleViewSet(viewsets.ModelViewSet):
     filter_backends = (SearchFilter,)
     filterset_class = TitleFilter
     search_fields = ('category', 'genre', 'name', 'year',)
+
+    def get_serializer_class(self):
+        if self.request.method in ('POST', 'PATCH',):
+            return TitlePostSerializer
+        return TitleSerializer
 
 
 
