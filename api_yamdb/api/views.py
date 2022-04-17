@@ -17,7 +17,7 @@ from .serializers import (SignUpSerializer, TokenSerializer,
                           NoStaffSerializer, CategorySerializer,
                           GenreSerializer, ReviewSerializer,
                           CommentSerializer)
-from .permissions import (IsAdmin, IsModerator, IsOwnerOrReadOnly, ReadOnly)
+from .permissions import (IsAdmin, IsModerator, IsOwnerOrReadOnly, ReadOnly, IsAdminOrReadOnly)
 
 
 class APIToken(APIView):
@@ -95,7 +95,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
 class CategoryViewSet(viewsets.ModelViewSet):
     permission_classes = [
-        ReadOnly or IsAdmin,
+        ReadOnly or IsAdminOrReadOnly,
     ]
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
@@ -106,7 +106,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
 
 class GenreViewSet(IsAdmin, viewsets.ModelViewSet):
     permission_classes = [
-        ReadOnly or IsAdmin,
+        ReadOnly or IsAdminOrReadOnly,
     ]
     filter_backends = (SearchFilter,)
     pagination_class = PageNumberPagination
@@ -118,7 +118,7 @@ class GenreViewSet(IsAdmin, viewsets.ModelViewSet):
 
 class TitleViewSet(IsAdmin, viewsets.ModelViewSet):
     permission_classes = [
-        ReadOnly or IsAdmin,
+        ReadOnly or IsAdminOrReadOnly,
     ]
     filter_backends = (SearchFilter,)
     pagination_class = PageNumberPagination
