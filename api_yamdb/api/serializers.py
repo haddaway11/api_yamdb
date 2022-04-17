@@ -48,15 +48,15 @@ class NoStaffSerializer(serializers.ModelSerializer):
 class CategorySerializer(serializers.ModelSerializer):
     
     class Meta:
+        exclude = ('id', )
         model = Category
-        fields = '__all__'
 
 
 class GenreSerializer(serializers.ModelSerializer):
     
     class Meta:
+        exclude = ('id', )
         model = Genre
-        fields = '__all__'
 
 
 class TitleSerializer(serializers.ModelSerializer):

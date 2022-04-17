@@ -20,6 +20,7 @@ from .serializers import (SignUpSerializer, TokenSerializer,
                           TitleWriteSerializer)
 from .permissions import (IsAdmin, IsModerator, IsOwnerOrReadOnly, ReadOnly, IsAdminOrReadOnly)
 from .mixins import ModelMixinSet
+from .filters import TitleFilter
 
 
 class APIToken(APIView):
@@ -133,6 +134,7 @@ class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all()
     serializer_class = TitleSerializer
     filter_backends = (SearchFilter,)
+    filterset_class = TitleFilter
     search_fields = ('category', 'genre', 'name', 'year',)
 
 
