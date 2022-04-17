@@ -16,11 +16,11 @@ from .serializers import (SignUpSerializer, TokenSerializer,
                           UserSerializer, TitleSerializer,
                           NoStaffSerializer, CategorySerializer,
                           GenreSerializer, ReviewSerializer,
-                          CommentSerializer, TitleReadSerializer,
-                          TitleWriteSerializer)
+                          CommentSerializer)
 from .permissions import (IsAdmin, IsModerator, IsOwnerOrReadOnly, ReadOnly, IsAdminOrReadOnly)
 from .mixins import ModelMixinSet
 from .filters import TitleFilter
+from rest_framework_simplejwt.tokens import RefreshToken
 
 
 class APIToken(APIView):
@@ -30,14 +30,20 @@ class APIToken(APIView):
     def post(self, request):
         serializer = TokenSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        confirmation_code = serializer.validated_data.get('confirmation_code',)
         user = get_object_or_404(
             User,
             username=serializer.validated_data.get('username'),)
+        if confirmation_code != user.confirmation_code:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        refresh = RefreshToken.for_user(user)
+        return Response({'token': str(refresh.access_token)},
+                        status=status.HTTP_200_OK)
         # user = serializer.save()
-        if default_token_generator.check_token(
-            user, serializer.validated_data.get('confirmation_code'),):
-            token = AccessToken.for_user(user)
-            return Response({'token': str(token)}, status=status.HTTP_200_OK)
+#        if default_token_generator.check_token(
+#            user, serializer.validated_data.get('confirmation_code'),):
+#            token = AccessToken.for_user(user)
+#            return Response({'token': str(token)}, status=status.HTTP_200_OK)
 
 
 class APISignup(APIView):
