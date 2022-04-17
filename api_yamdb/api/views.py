@@ -12,7 +12,7 @@ from rest_framework import permissions, status, viewsets
 from rest_framework.filters import SearchFilter
 from reviews.models import User, Category, Genre, Title, Review, Comment
 from django.core.mail import send_mail
-from .permissions import IsAdminOrReadOnly
+from .permissions import IsAdmin
 from .serializers import (SignUpSerializer, TokenSerializer,
                           UserSerializer, TitleSerializer,
                           NoStaffSerializer, CategorySerializer,
