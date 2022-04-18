@@ -22,14 +22,16 @@ class TokenSerializer(serializers.ModelSerializer):
 
 
 class SignUpSerializer(serializers.ModelSerializer):
-    
+
     class Meta:
         model = User
         fields = ('email', 'username')
 
     def validate(self, value):
         if value['username'] == 'me':
-            raise serializers.ValidationError('Имя пользователя не может быть "me"!')
+            raise serializers.ValidationError(
+                'Имя пользователя не может быть "me"!'
+            )
         return value
 
 
@@ -42,16 +44,15 @@ class NoStaffSerializer(serializers.ModelSerializer):
         read_only_fields = ('role',)
 
 
-
 class CategorySerializer(serializers.ModelSerializer):
-    
+
     class Meta:
         exclude = ('id', )
         model = Category
 
 
 class GenreSerializer(serializers.ModelSerializer):
-    
+
     class Meta:
         exclude = ('id', )
         model = Genre
@@ -65,7 +66,6 @@ class TitleSerializer(serializers.ModelSerializer):
     )
     rating = serializers.SerializerMethodField(read_only=True)
 
-
     class Meta:
         model = Title
         fields = (
@@ -77,6 +77,7 @@ class TitleSerializer(serializers.ModelSerializer):
         for rating in rate.values():
             if rating:
                 return int(rating)
+
 
 class TitlePostSerializer(serializers.ModelSerializer):
     genre = serializers.SlugRelatedField(
@@ -98,13 +99,13 @@ class ReviewSerializer(serializers.ModelSerializer):
     author = SlugRelatedField(
         read_only=True,
         slug_field='username',
-    )    
-    
+    )
+
     class Meta:
         exclude = ('title', )
         model = Review
 
-        
+
 class CommentSerializer(serializers.ModelSerializer):
     author = SlugRelatedField(
         read_only=True,

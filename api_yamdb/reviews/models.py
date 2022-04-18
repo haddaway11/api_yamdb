@@ -12,6 +12,7 @@ CHOICE_ROLE = (
     (ADMIN, 'admin'),
 )
 
+
 class User(AbstractUser):
     email = models.EmailField(
         verbose_name='Адрес электронной почты',
@@ -50,11 +51,11 @@ class User(AbstractUser):
         null=True,
         blank=False,
     )
-    
+
     @property
     def is_admin(self):
         return self.role == ADMIN
-    
+
     @property
     def is_moderator(self):
         return self.role == MODERATOR
@@ -64,7 +65,7 @@ class User(AbstractUser):
         return self.role == USER
 
     class Meta:
-       ordering = ['-id']
+        ordering = ['-id']
 
     def __str__(self):
         return self.username
@@ -75,7 +76,7 @@ class Category(models.Model):
     slug = models.SlugField(unique=True)
 
     class Meta:
-       ordering = ['-id']
+        ordering = ['-id']
 
     def __str__(self):
         return self.name
@@ -86,7 +87,7 @@ class Genre(models.Model):
     slug = models.SlugField(unique=True)
 
     class Meta:
-       ordering = ['-id']
+        ordering = ['-id']
 
     def __str__(self):
         return self.name
@@ -98,7 +99,8 @@ class Title(models.Model):
     description = models.CharField(max_length=200, blank=True)
     rating = models.FloatField(default=None, null=True, blank=True)
     category = models.ForeignKey(
-        Category, on_delete=models.SET_NULL, related_name="titles", blank=True, null=True
+        Category, on_delete=models.SET_NULL, related_name="titles",
+        blank=True, null=True
     )
     genre = models.ManyToManyField(
         Genre, related_name="titles", blank=True
@@ -118,10 +120,9 @@ class Review(models.Model):
     )
     text = models.TextField()
     author = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='titles', 
+        User, on_delete=models.CASCADE, related_name='titles',
     )
     pub_date = models.DateTimeField('Дата публикации ревью', auto_now_add=True)
-  
 
     class Meta:
         ordering = ['-id']
@@ -129,7 +130,7 @@ class Review(models.Model):
             models.UniqueConstraint(
                 fields=['title', 'author'],
                 name='title_author'
-        )
+            )
         ]
 
 
@@ -146,4 +147,4 @@ class Comment(models.Model):
     )
 
     class Meta:
-       ordering = ['-id']
+        ordering = ['-id']

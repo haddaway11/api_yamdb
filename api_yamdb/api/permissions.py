@@ -1,5 +1,6 @@
 from rest_framework import permissions
 
+
 class AuthorModerAdmOrRead(permissions.BasePermission):
     def has_permission(self, request, view):
         if request.method not in permissions.SAFE_METHODS:
@@ -15,7 +16,7 @@ class AuthorModerAdmOrRead(permissions.BasePermission):
             )
         )
 
-      
+
 class IsOwnerOrReadOnly(permissions.BasePermission):
     message = 'Изменение чужого контента запрещено!'
 
@@ -25,7 +26,7 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
 
 
 class IsModerator(permissions.BasePermission):
-   
+
     def has_object_permission(self, request, view, obj):
         return (request.method in permissions.SAFE_METHODS
                 or request.user.is_moderator
@@ -34,7 +35,7 @@ class IsModerator(permissions.BasePermission):
 
 
 class IsAdmin(permissions.BasePermission):
-   
+
     def has_permission(self, request, view):
         return (request.user.is_admin
                 or request.user.is_superuser)
@@ -44,20 +45,8 @@ class IsAdmin(permissions.BasePermission):
                 or request.user.is_superuser)
 
 
-# class AdminOnly(permissions.BasePermission):
-#     def has_permission(self, request, view):
-#         return (
-#             request.user.is_admin
-#             or request.user.is_staff
-#         )
-
-#     def has_object_permission(self, request, view, obj):
-#         return (request.user.is_admin
-#                 or request.user.is_superuser)
-
-
 class IsAdminOrReadOnly(permissions.BasePermission):
-    
+
     def has_permission(self, request, view):
         return bool(
             request.method in permissions.SAFE_METHODS
