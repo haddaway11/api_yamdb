@@ -52,7 +52,7 @@ class Test05ReviewAPI:
             f'статус {code}'
         )
         try:
-            from reviews.models import Review, Title
+            from reviews.models import  Title, Review
         except Exception as e:
             assert False, (
                 'Не удалось импортировать модели из приложения reviews. '
@@ -61,6 +61,7 @@ class Test05ReviewAPI:
         from django.db.utils import IntegrityError
         title = Title.objects.get(pk=titles[0]["id"])
         review = None
+        print('aaaaa')
         try:
             review = Review.objects.create(
                 text='Текст второго отзыва',
@@ -68,9 +69,10 @@ class Test05ReviewAPI:
                 author=admin,
                 title=title
             )
+            print('bbbbb')
         except IntegrityError:
             pass
-
+            # print('bbbb')
         assert review is None, (
             'Проверьте, что через прямой запрос к Django ORM '
             'нельзя добавить второй отзыв на то же самое произведение. '
