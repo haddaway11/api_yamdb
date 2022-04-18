@@ -1,24 +1,22 @@
-from email import message
-from rest_framework import permissions, viewsets, generics
+from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.contrib.auth.tokens import default_token_generator
-from rest_framework_simplejwt.tokens import AccessToken
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.pagination import PageNumberPagination
-from rest_framework import permissions, status, viewsets
+from rest_framework import status, viewsets
 from rest_framework.filters import SearchFilter
 from django_filters.rest_framework import DjangoFilterBackend
-from reviews.models import User, Category, Genre, Title, Review, Comment
+from reviews.models import User, Category, Genre, Title, Review
 from django.core.mail import send_mail
 from .serializers import (SignUpSerializer, TokenSerializer,
                           UserSerializer, TitleSerializer,
                           NoStaffSerializer, CategorySerializer,
                           GenreSerializer, ReviewSerializer,
                           CommentSerializer, TitlePostSerializer)
-from .permissions import (IsAdmin, IsModerator, IsOwnerOrReadOnly, ReadOnly, IsAdminOrReadOnly, AuthorModerAdmOrRead)
+from .permissions import (IsAdmin, IsAdminOrReadOnly, AuthorModerAdmOrRead)
 from .mixins import ModelMixinSet
 from .filters import TitleFilter
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -40,12 +38,7 @@ class APIToken(APIView):
         refresh = RefreshToken.for_user(user)
         return Response({'token': str(refresh.access_token)},
                         status=status.HTTP_200_OK)
-        # user = serializer.save()
-#        if default_token_generator.check_token(
-#            user, serializer.validated_data.get('confirmation_code'),):
-#            token = AccessToken.for_user(user)
-#            return Response({'token': str(token)}, status=status.HTTP_200_OK)
-
+        
 
 class APISignup(APIView):
     """Неавторизованный пользователь отправляет запрос с параметрами e-mail и username и получает в ответ код подтверждения."""
@@ -54,10 +47,6 @@ class APISignup(APIView):
     def post(self, request):
         serializer = SignUpSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        # user = get_object_or_404(
-        #     User,
-        #     username=serializer.validated_data.get('username'),)
-        # serializer.save()
         user = serializer.save()
         confirmation_code = default_token_generator.make_token(user)
         send_mail(
@@ -133,13 +122,8 @@ class TitleViewSet(viewsets.ModelViewSet):
     ]
     pagination_class = PageNumberPagination
     queryset = Title.objects.all()
-    # serializer_class = TitleReadSerializer
-    # filter_backends = (SearchFilter,)
-    # filterset_class = TitleFilter
     filter_backends = (DjangoFilterBackend, )
-    # search_fields = ('category', 'genre', 'name', 'year',)
-    filterset_fields = ('category', 'genre', 'name', 'year',)
-
+    filterset_class = TitleFilter
     def get_serializer_class(self):
         if self.request.method in ('POST', 'PATCH',):
             return TitlePostSerializer
@@ -180,7 +164,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         title_id = self.kwargs.get("title_id")
-        serializer.save(author=self.request.user, title_id_id=title_id)
+        serializer.save(author=self.request.user, title_id=title_id)
 
 
 class CommentViewSet(viewsets.ModelViewSet):
