@@ -1,9 +1,7 @@
+from django.db.models import Avg
 from rest_framework import serializers
 from rest_framework.relations import SlugRelatedField
-from rest_framework.validators import UniqueValidator
-from django.core.exceptions import ValidationError
-from reviews.models import User, Category, Genre, Title, Review, Comment
-
+from reviews.models import Category, Comment, Genre, Review, Title, User
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -65,6 +63,8 @@ class TitleSerializer(serializers.ModelSerializer):
         read_only=True,
         many=True
     )
+    rating = serializers.SerializerMethodField(read_only=True)
+
 
     class Meta:
         model = Title
@@ -72,6 +72,11 @@ class TitleSerializer(serializers.ModelSerializer):
             'id', 'name', 'year', 'rating', 'description', 'genre', 'category'
         )
 
+    def get_rating(self, obj):
+        rate = Review.objects.filter(title_id=obj.id).aggregate(Avg('score'))
+        for rating in rate.values():
+            if rating:
+                return int(rating)
 
 class TitlePostSerializer(serializers.ModelSerializer):
     genre = serializers.SlugRelatedField(
@@ -80,6 +85,7 @@ class TitlePostSerializer(serializers.ModelSerializer):
     category = serializers.SlugRelatedField(
         slug_field="slug", many=False, queryset=Category.objects.all()
     )
+
     class Meta:
         model = Title
         fields = (
@@ -88,9 +94,23 @@ class TitlePostSerializer(serializers.ModelSerializer):
 
 
 class ReviewSerializer(serializers.ModelSerializer):
-    pass
 
+    author = SlugRelatedField(
+        read_only=True,
+        slug_field='username',
+    )    
+    
+    class Meta:
+        exclude = ('title', )
+        model = Review
 
+        
 class CommentSerializer(serializers.ModelSerializer):
-    pass
+    author = SlugRelatedField(
+        read_only=True,
+        slug_field='username'
+    )
 
+    class Meta:
+        exclude = ('review_id', )
+        model = Comment

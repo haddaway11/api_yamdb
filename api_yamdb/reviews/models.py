@@ -104,14 +104,49 @@ class Title(models.Model):
         Genre, related_name="titles", blank=True
     )
 
+    class Meta:
+       ordering = ['name']
+
     def __str__(self):
         return self.name
 
 
 class Review(models.Model):
-    pass
+
+    SCORE_CHOICES = zip(range(1, 11), range(1, 11))
+
+    score = models.IntegerField(choices=SCORE_CHOICES)
+    title = models.ForeignKey(
+        Title, on_delete=models.CASCADE, related_name='reviews'
+    )
+    text = models.TextField()
+    author = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='titles', 
+    )
+    pub_date = models.DateTimeField('Дата публикации ревью', auto_now_add=True)
+  
+
+    class Meta:
+        ordering = ['-pub_date']
+        constraints = [
+            models.UniqueConstraint(
+                fields=['title', 'author'],
+                name='title_author'
+        )
+        ]
 
 
 class Comment(models.Model):
-    pass
+    review_id = models.ForeignKey(
+        Review, on_delete=models.CASCADE, related_name='comments'
+    )
+    text = models.TextField()
+    author = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='comments'
+    )
+    pub_date = models.DateTimeField(
+        'Дата публикации комментария', null=True, auto_now_add=True
+    )
 
+    class Meta:
+       ordering = ['-pub_date']
