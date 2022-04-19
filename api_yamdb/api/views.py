@@ -134,11 +134,11 @@ class TitleViewSet(viewsets.ModelViewSet):
     pagination_class = PageNumberPagination
     queryset = Title.objects.all()
     # serializer_class = TitleReadSerializer
-    # filter_backends = (SearchFilter,)
-    # filterset_class = TitleFilter
-    filter_backends = (DjangoFilterBackend, )
-    # search_fields = ('category', 'genre', 'name', 'year',)
-    filterset_fields = ('category', 'genre', 'name', 'year',)
+    filter_backends = (SearchFilter,)
+    filterset_class = TitleFilter
+    # filter_backends = (DjangoFilterBackend, )
+    search_fields = ('category', 'genre', 'name', 'year',)
+    # filterset_fields = ('category', 'genre', 'name', 'year',)
 
     def get_serializer_class(self):
         if self.request.method in ('POST', 'PATCH',):
