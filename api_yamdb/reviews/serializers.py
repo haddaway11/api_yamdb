@@ -1,6 +1,9 @@
 from django.db.models import Avg
 from rest_framework import serializers
+from .models import Category, Comment, Genre, Review, Title
+from rest_framework import serializers
 from rest_framework.relations import SlugRelatedField
+<<<<<<< HEAD:api_yamdb/api/serializers.py
 from reviews.models import Category, Comment, Genre, Review, Title, User
 
 
@@ -43,6 +46,8 @@ class NoStaffSerializer(serializers.ModelSerializer):
             'last_name', 'bio', 'role')
         read_only_fields = ('role',)
 
+=======
+>>>>>>> master:api_yamdb/reviews/serializers.py
 
 class CategorySerializer(serializers.ModelSerializer):
 

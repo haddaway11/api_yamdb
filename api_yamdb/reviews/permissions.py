@@ -34,6 +34,7 @@ class IsModerator(permissions.BasePermission):
                 or request.user.is_superuser)
 
 
+<<<<<<< HEAD:api_yamdb/api/permissions.py
 class IsAdmin(permissions.BasePermission):
 
     def has_permission(self, request, view):
@@ -45,6 +46,8 @@ class IsAdmin(permissions.BasePermission):
                 or request.user.is_superuser)
 
 
+=======
+>>>>>>> master:api_yamdb/reviews/permissions.py
 class IsAdminOrReadOnly(permissions.BasePermission):
 
     def has_permission(self, request, view):

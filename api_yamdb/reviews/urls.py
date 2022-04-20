@@ -2,12 +2,16 @@ from django.urls import include, path
 from rest_framework import routers
 
 from .views import (
+<<<<<<< HEAD:api_yamdb/api/urls.py
     APISignup, APIToken, CategoryViewSet, CommentViewSet,
     GenreViewSet, ReviewViewSet, TitleViewSet, UserViewSet
+=======
+    CategoryViewSet, GenreViewSet, TitleViewSet,
+    ReviewViewSet, CommentViewSet
+>>>>>>> master:api_yamdb/reviews/urls.py
 )
 
 router = routers.DefaultRouter()
-router.register('users', UserViewSet)
 router.register('categories', CategoryViewSet)
 router.register('genres', GenreViewSet)
 router.register('titles', TitleViewSet)
@@ -22,7 +26,5 @@ router.register(
 )
 
 urlpatterns = [
-    path('v1/auth/signup/', APISignup.as_view(), name='signup'),
-    path('v1/auth/token/', APIToken.as_view(), name='token'),
     path('v1/', include(router.urls)),
 ]

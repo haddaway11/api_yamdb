@@ -1,5 +1,5 @@
-from django.contrib.auth.models import AbstractUser
 from django.db import models
+<<<<<<< HEAD
 
 
 USER = 'user'
@@ -69,6 +69,9 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
+=======
+from users.models import User
+>>>>>>> master
 
 
 class Category(models.Model):
@@ -105,6 +108,9 @@ class Title(models.Model):
     genre = models.ManyToManyField(
         Genre, related_name="titles", blank=True
     )
+
+    class Meta:
+        ordering = ['-id']
 
     def __str__(self):
         return self.name
