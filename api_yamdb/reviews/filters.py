@@ -1,6 +1,7 @@
 from django_filters import CharFilter, FilterSet
 from django_filters.rest_framework import FilterSet
-from reviews.models import Title
+from .models import Title
+
 
 class TitleFilter(FilterSet):
     category = CharFilter(field_name='category__slug', lookup_expr='iexact')
